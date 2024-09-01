@@ -1,0 +1,138 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Minimal ping API server
+paths:
+  /ping:
+    get:
+      responses:
+        "200":
+          description: pet response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pong"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+        "500":
+          $ref: "#/components/responses/Error"
+  /api/v1/books:
+    get:
+      responses:
+        "200":
+          description: book response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BookDTO"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+        "500":
+          $ref: "#/components/responses/Error"
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBookDTO"
+      responses:
+        "201":
+          description: book response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookDTO"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+        "500":
+          $ref: "#/components/responses/Error"
+
+components:
+  responses:
+    Error:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  schemas:
+    # base types
+    BookDTO:
+      type: object
+      required:
+        - id
+        - title
+        - author
+        - description
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          example: "f7b3f1b0-3b7b-4b1e-8b3e-3f1b7b4b1e8b"
+        title:
+          type: string
+          example: "The Great Gatsby"
+        author:
+          type: string
+          example: "F. Scott Fitzgerald"
+        description:
+          type: string
+          example: "The Great Gatsby is a novel by American author F. Scott Fitzgerald."
+        createdAt:
+          type: string
+          example: "2021-01-01T00:00:00Z"
+        updatedAt:
+          type: string
+          example: "2021-01-01T00:00:00Z"
+    CreateBookDTO:
+      type: object
+      required:
+        - title
+        - author
+        - description
+      properties:
+        title:
+          type: string
+          example: "The Great Gatsby"
+        author:
+          type: string
+          example: "F. Scott Fitzgerald"
+        description:
+          type: string
+          example: "The Great Gatsby is a novel by American author F. Scott Fitzgerald."
+
+    Pong:
+      type: object
+      required:
+        - ping
+      properties:
+        ping:
+          type: string
+          example: pong
+    # error types
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: error message
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - BearerAuth: []
